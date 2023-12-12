@@ -1,7 +1,7 @@
 # Build commands
 
 ```bash
-spago bundle-app --main ToC.ReaderT.Main --to dist/mdbook-toc.js
+spago bundle-app --platform=node --main ToC.ReaderT.Main --to dist/mdbook-toc.js
 ```
 
 Final way

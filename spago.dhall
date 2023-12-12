@@ -1,33 +1,24 @@
-{-
-Welcome to a Spago project!
-You can edit this file as you like.
--}
-{ sources =
-    [ "src/**/*.purs", "test/**/*.purs" ]
-, name =
-    "toc-generator"
+{ name = "toc-generator"
 , dependencies =
-    [ "benchotron"
-    , "console"
-    , "control"
-    , "debug"
-    , "effect"
-    , "node-fs-aff"
-    , "node-http"
-    , "node-path"
-    , "node-readline"
-    , "optparse"
-    , "prelude"
-    , "psci-support"
-    , "quickcheck"
-    , "run"
-    , "st"
-    , "string-parsers"
-    , "stringutils"
-    , "transformers"
-    , "tree-rose"
-    , "unicode"
-    , "variant"
-    ]
+  [ "aff"
+  , "arrays"
+  , "console"
+  , "effect"
+  , "either"
+  , "foldable-traversable"
+  , "integers"
+  , "maybe"
+  , "node-buffer"
+  , "node-fs"
+  , "node-os"
+  , "node-path"
+  , "optparse"
+  , "prelude"
+  , "strings"
+  , "stringutils"
+  , "transformers"
+  , "type-equality"
+  ]
 , packages = ./packages.dhall
+, sources = [ "src/**/*.purs" ]
 }

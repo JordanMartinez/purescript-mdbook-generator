@@ -9,10 +9,12 @@ import Effect.Aff.Class (class MonadAff, liftAff)
 import Effect.Class (class MonadEffect, liftEffect)
 import Effect.Console as Console
 import Node.Encoding (Encoding(..))
-import Node.FS.Aff as FS
+import Node.FS.Sync as FS
+import Node.FS.Aff as FSA
+import Node.FS.Perms (permsAll)
 import Node.FS.Stats as Stats
-import ToC.Core.Paths (PathType(..), FilePath, PathRec, parentPath, fullPath)
 import ToC.Core.Env (ProductionEnv, LogLevel)
+import ToC.Core.Paths (PathType(..), FilePath, PathRec, parentPath, fullPath)
 import ToC.Domain (class Logger, class ReadPath, class WriteToFile, class Renderer, readFile, writeToFile, mkDir)
 import Type.Equality (class TypeEquals, from)
 
@@ -43,17 +45,17 @@ instance readPathAppM :: ReadPath AppM where
   readDir :: FilePath -> AppM (Array FilePath)
   readDir path =
     liftAff do
-      FS.readdir path
+      FSA.readdir path
 
   readFile :: FilePath -> AppM String
   readFile path =
     liftAff do
-      FS.readTextFile UTF8 path
+      FSA.readTextFile UTF8 path
 
   readPathType :: FilePath -> AppM (Maybe PathType)
   readPathType path =
     liftAff do
-      stat <- FS.stat path
+      stat <- FSA.stat path
       pure $
         if Stats.isDirectory stat
           then Just Dir
@@ -63,7 +65,7 @@ instance readPathAppM :: ReadPath AppM where
 
   exists :: FilePath -> AppM Boolean
   exists path =
-    liftAff do
+    liftEffect do
       FS.exists path
 
 instance rendererAppM :: Renderer AppM where
@@ -75,7 +77,7 @@ instance writeToFileAppM :: WriteToFile AppM where
   writeToFile :: FilePath -> String -> AppM Unit
   writeToFile filePath content = do
     liftAff do
-      FS.writeTextFile UTF8 filePath content
+      FSA.writeTextFile UTF8 filePath content
 
   copyFile :: PathRec -> PathRec -> AppM Unit
   copyFile fromRec toRec = do
@@ -89,4 +91,4 @@ instance writeToFileAppM :: WriteToFile AppM where
   mkDir :: FilePath -> AppM Unit
   mkDir filePath = do
     liftAff do
-      FS.mkdirRecursive filePath
+      FSA.mkdir' filePath { recursive: true, mode: permsAll }
